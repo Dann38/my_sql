@@ -219,3 +219,5 @@ SELECT
   COUNT(*) as 'кол-во пользователь с д.р. в этот день'
 FROM users GROUP BY WEEKDAY(DATE_ADD(birthday_at,
 INTERVAL YEAR(NOW()) - YEAR(birthday_at) YEAR));
+
+
