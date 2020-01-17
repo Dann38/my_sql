@@ -37,7 +37,7 @@ DROP TABLE IF EXISTS products;
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) COMMENT 'Название',
-  desription TEXT COMMENT 'Описание',
+  description TEXT COMMENT 'Описание',
   price DECIMAL (11,2) COMMENT 'Цена',
   catalog_id INT UNSIGNED,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -64,6 +64,20 @@ CREATE TABLE orders (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   KEY index_of_user_id(user_id)
 ) COMMENT = 'Заказы';
+INSERT INTO orders 
+  (user_id)
+VALUES
+  ('1'),
+  ('1'),
+  ('2'),
+  ('5'),
+  ('3'),
+  ('1'),
+  ('2'),
+  ('1'),
+  ('1'),
+  ('6'),
+  ('6');
 
 DROP TABLE IF EXISTS orders_products;
 CREATE TABLE orders_products (
@@ -74,6 +88,21 @@ CREATE TABLE orders_products (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) COMMENT = 'Состав заказа';
+INSERT INTO orders_products 
+  (order_id, product_id, total)
+VALUES
+  ('1', '2', 4),
+  ('2', '2', 0),
+  ('3', '4', 6),
+  ('4', '7', 2),
+  ('5', '7', 3),
+  ('6', '7', 3),
+  ('7', '5', 6),
+  ('8', '3', 3),
+  ('9', '5', 2),
+  ('10', '2', 1),
+  ('11', '1', 1);
+
 
 DROP TABLE IF EXISTS discounts;
 CREATE TABLE discounts (
@@ -97,6 +126,12 @@ CREATE TABLE storehouses (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) COMMENT = 'Склады';
 
+INSERT INTO storehouses 
+  (name)
+VALUES
+  ('Главный склад'),
+  ('Большой склад');
+
 DROP TABLE IF EXISTS storehouses_products;
 CREATE TABLE storehouses_products (
   id SERIAL PRIMARY KEY,
@@ -106,6 +141,24 @@ CREATE TABLE storehouses_products (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) COMMENT = 'Запасы на складе';
+
+INSERT INTO storehouses_products
+  (storehouse_id, product_id, value)
+VALUES
+  ('1', '1', 100),
+  ('1', '2', 0),
+  ('1', '3', 5),
+  ('1', '4', 10),
+  ('1', '5', 15),
+  ('1', '6', 86),
+  ('1', '7', 95),
+  ('2', '1', 0),
+  ('2', '2', 0),
+  ('2', '3', 64),
+  ('2', '4', 725),
+  ('2', '5', 20),
+  ('2', '6', 200),
+  ('2', '7', 980);
 
 
 
@@ -128,4 +181,5 @@ DATETIME, сохранив введеные ранее значения.
 
 ALTER TABLE users CHANGE created_at created_at DATETIME;
 ALTER TABLE users CHANGE updated_at updated_at DATETIME;
+
 
