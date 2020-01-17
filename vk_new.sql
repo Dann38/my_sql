@@ -72,7 +72,7 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`) VALUES ('5
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`) VALUES ('58', 'Dean', 'Satterfield', 'orin69@example.net', '9160120629');
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`) VALUES ('59', 'Prudence', 'Shields', 'sleffler@example.net', '9414604655');
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`) VALUES ('60', 'Elaina', 'Buckridge', 'bartell.einar@example.net', '9916593682');
-INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`) VALUES ('61', 'Monserrat', 'O\'Conner', 'linda58@example.com', '9519551625');
+INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`) VALUES ('61', 'Monserrat', 'O`Conner', 'linda58@example.com', '9519551625');
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`) VALUES ('62', 'Ramona', 'Davis', 'abbigail68@example.net', '9484610686');
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`) VALUES ('63', 'Eldridge', 'Wilkinson', 'callie.wuckert@example.org', '9532811737');
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`) VALUES ('64', 'Emanuel', 'Reinger', 'loyal.herzog@example.org', '9659591995');
@@ -709,3 +709,22 @@ INSERT INTO `profiles` VALUES
 ('98','f','2005-09-07','98','1990-04-06 05:48:14','Lockmantown'),
 ('99','f','1996-10-09','99','1981-09-24 02:19:44','Lake Lora'),
 ('100','f','1990-02-11','100','1974-08-23 15:31:47','Port Mable'); 
+
+
+
+/* Задача 6.1
+Пусть задан некоторый пользователь.
+Из всех друзей этого пользователя найдите человека,
+который больше всех общался с нашим пользователем.
+ */
+
+-- user_id = 1
+-- кол-во в топе = 2
+
+SELECT IF (from_user_id = 1, to_user_id, from_user_id) as id_top, COUNT(*) as 'кол-во сообщений' 
+FROM messages WHERE from_user_id = 1 or to_user_id = 1 
+GROUP BY id_top 
+LIMIT 2;
+
+
+
