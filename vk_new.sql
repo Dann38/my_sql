@@ -726,5 +726,26 @@ FROM messages WHERE from_user_id = 1 or to_user_id = 1
 GROUP BY id_top 
 LIMIT 2;
 
+/* Задача 6.2
+Подсчитать общее количество лайков, которые получили пользователи младше 10 лет..
+Определить кто больше поставил лайков (всего) - мужчины или женщины?
+  */
+
+SELECT CONCAT(firstname, ' ', lastname),() as'кол-во лайков' FROM users;
+SELECT media_id, COUNT(*) FROM likes GROUP BY media_id;
+SELECT * FROM media;
+SELECT CONCAT('user#',user_id, '-запись id№',id), (SELECT COUNT(*) FROM likes WHERE media_id = media.id) as 'кол-во лайков'  FROM media;
+
+SELECT user_id, SUM((SELECT COUNT(*) FROM likes WHERE media_id = media.id)) as 'кол-во лайков'  FROM media GROUP BY user_id;
 
 
+
+
+
+SELECT CONCAT(firstname, ' ', lastname), (
+SELECT SUM((SELECT COUNT(*) FROM likes WHERE media_id = media.id))  FROM media WHERE user_id = users.id
+) as'кол-во лайков' FROM users WHERE 
+(
+SELECT SUM((SELECT COUNT(*) FROM likes WHERE media_id = media.id))  FROM media WHERE user_id = users.id
+) > 0
+;
