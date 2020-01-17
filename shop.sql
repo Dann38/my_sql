@@ -160,20 +160,6 @@ VALUES
   ('2', '6', 200),
   ('2', '7', 980);
 
-/* Задача 5.3
- В таблице складских запасов storehouses_products в поле value 
- могут встречаться самые разные цифры: 0, если товар закончился и выше нуля,
- если на складе имеются запасы. Необходимо отсортировать записи таким образом, 
- чтобы они выводились в порядке увеличения значения value. 
- Однако, нулевые запасы должны выводиться в конце, после всех записей.
- */
-
-SELECT storehouse_id AS 'склад', product_id AS 'id продукта', value AS 'кол-во продуктов' 
-FROM storehouses_products ORDER BY 
-CASE 
-  WHEN value = 0 THEN 1 else 0
-END, value;
-
 /* Задача 5.1
 Пусть в таблице users поля created_at и updated_at
 оказались незаполненными. Заполните их текущими датой и временем.
@@ -193,3 +179,24 @@ ALTER TABLE users CHANGE created_at created_at DATETIME;
 ALTER TABLE users CHANGE updated_at updated_at DATETIME;
 
 
+/* Задача 5.3
+ В таблице складских запасов storehouses_products в поле value 
+ могут встречаться самые разные цифры: 0, если товар закончился и выше нуля,
+ если на складе имеются запасы. Необходимо отсортировать записи таким образом, 
+ чтобы они выводились в порядке увеличения значения value. 
+ Однако, нулевые запасы должны выводиться в конце, после всех записей.
+ */
+
+SELECT storehouse_id AS 'склад', product_id AS 'id продукта', value AS 'кол-во продуктов' 
+FROM storehouses_products ORDER BY 
+CASE 
+  WHEN value = 0 THEN 1 else 0
+END, value;
+
+/* Задача 5.4
+ (по желанию) Из таблицы users необходимо извлечь пользователей, 
+ родившихся в августе и мае. Месяцы заданы в виде списка 
+ английских названий ('may', 'august')
+ */
+
+SELECT id, name, birthday_at, date(birthday_at) as dt FROM users WHERE MONTHNAME(birthday_at) = 'may' OR MONTHNAME(birthday_at) = 'august'  ;
