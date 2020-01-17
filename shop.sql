@@ -160,14 +160,14 @@ VALUES
   ('2', '6', 200),
   ('2', '7', 980);
 
-/* Задача 5.1
+/* Задача 5.1.1
 Пусть в таблице users поля created_at и updated_at
 оказались незаполненными. Заполните их текущими датой и временем.
 */
 
 UPDATE users SET created_at=NOW() WHERE created_at IS NULL;
 UPDATE users SET updated_at=NOW() WHERE updated_at IS NULL;
-/* Задача 5.2 
+/* Задача 5.1.2 
 Таблица users была неудачно спроектирована.
 Записи created_at и updated_at были заданы типом 
 VARCHAR и в них долгое время помещались значения
@@ -179,7 +179,7 @@ ALTER TABLE users CHANGE created_at created_at DATETIME;
 ALTER TABLE users CHANGE updated_at updated_at DATETIME;
 
 
-/* Задача 5.3
+/* Задача 5.1.3
  В таблице складских запасов storehouses_products в поле value 
  могут встречаться самые разные цифры: 0, если товар закончился и выше нуля,
  если на складе имеются запасы. Необходимо отсортировать записи таким образом, 
@@ -193,10 +193,29 @@ CASE
   WHEN value = 0 THEN 1 else 0
 END, value;
 
-/* Задача 5.4
+/* Задача 5.1.4
  (по желанию) Из таблицы users необходимо извлечь пользователей, 
  родившихся в августе и мае. Месяцы заданы в виде списка 
  английских названий ('may', 'august')
  */
 
 SELECT id, name, birthday_at, date(birthday_at) as dt FROM users WHERE MONTHNAME(birthday_at) = 'may' OR MONTHNAME(birthday_at) = 'august'  ;
+
+/* Задача 5.2.1
+Подсчитайте средний возраст пользователей в таблице users
+*/
+
+SELECT ROUND(AVG(DATEDIFF(NOW(), birthday_at)/365.25)) FROM users;
+
+/* Задача 5.2.2
+Подсчитайте количество дней рождения, которые приходятся на каждый из дней недели.
+Следует учесть, что необходимы дни недели текущего года, а не года рождения.
+*/
+
+SELECT 
+  MAX(WEEKDAY(DATE_ADD(
+    birthday_at, INTERVAL YEAR(NOW()) - YEAR(birthday_at) YEAR
+  ))) as 'Номер дня недели',
+  COUNT(*) as 'кол-во пользователь с д.р. в этот день'
+FROM users GROUP BY WEEKDAY(DATE_ADD(birthday_at,
+INTERVAL YEAR(NOW()) - YEAR(birthday_at) YEAR));
