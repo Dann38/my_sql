@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS shop;
+CREATE DATABASE shop;
+USE shop;
+
 DROP TABLE IF EXISTS catalogs;
 CREATE TABLE catalogs (
   id SERIAL PRIMARY KEY,
@@ -102,3 +106,26 @@ CREATE TABLE storehouses_products (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) COMMENT = 'Запасы на складе';
+
+
+
+
+
+/* Задача 5.1
+Пусть в таблице users поля created_at и updated_at
+оказались незаполненными. Заполните их текущими датой и временем.
+*/
+
+UPDATE users SET created_at=NOW() WHERE created_at IS NULL;
+UPDATE users SET updated_at=NOW() WHERE updated_at IS NULL;
+/* Задача 5.2 
+Таблица users была неудачно спроектирована.
+Записи created_at и updated_at были заданы типом 
+VARCHAR и в них долгое время помещались значения
+в формате "20.10.2017 8:10". Необходимо преобразовать поля к типу
+DATETIME, сохранив введеные ранее значения.
+*/
+
+ALTER TABLE users CHANGE created_at created_at DATETIME;
+ALTER TABLE users CHANGE updated_at updated_at DATETIME;
+
