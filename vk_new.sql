@@ -730,7 +730,7 @@ LIMIT 2;
 Подсчитать общее количество лайков, которые получили пользователи младше 10 лет..
 Определить кто больше поставил лайков (всего) - мужчины или женщины?
   */
-
+/*
 SELECT CONCAT(firstname, ' ', lastname),() as'кол-во лайков' FROM users;
 SELECT media_id, COUNT(*) FROM likes GROUP BY media_id;
 SELECT * FROM media;
@@ -739,13 +739,18 @@ SELECT CONCAT('user#',user_id, '-запись id№',id), (SELECT COUNT(*) FROM 
 SELECT user_id, SUM((SELECT COUNT(*) FROM likes WHERE media_id = media.id)) as 'кол-во лайков'  FROM media GROUP BY user_id;
 
 
+SHOW TABLES;
+SELECT * FROM vk.profiles WHERE birthday + INTERVAL 10 YEAR > NOW();
+*/
 
-
-
-SELECT CONCAT(firstname, ' ', lastname), (
-SELECT SUM((SELECT COUNT(*) FROM likes WHERE media_id = media.id))  FROM media WHERE user_id = users.id
-) as'кол-во лайков' FROM users WHERE 
+SELECT CONCAT('id ', id, '| ', firstname, ' ', lastname) as 'user', 
 (
-SELECT SUM((SELECT COUNT(*) FROM likes WHERE media_id = media.id))  FROM media WHERE user_id = users.id
-) > 0
+  SELECT SUM((SELECT COUNT(*) FROM likes WHERE media_id = media.id))  FROM media WHERE user_id = users.id
+) 
+as'кол-во лайков' FROM users WHERE 
+  (
+    SELECT SUM((SELECT COUNT(*) FROM likes WHERE media_id = media.id))  FROM media WHERE user_id = users.id
+  ) > 0 
+ AND 
+  id IN (SELECT user_id FROM vk.profiles WHERE birthday + INTERVAL 10 YEAR > NOW())
 ;
