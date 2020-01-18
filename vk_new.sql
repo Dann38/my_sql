@@ -754,3 +754,13 @@ as'кол-во лайков' FROM users WHERE
  AND 
   id IN (SELECT user_id FROM vk.profiles WHERE birthday + INTERVAL 10 YEAR > NOW())
 ;
+
+-- SELECT user_id, gender FROM vk.profiles ;
+
+SELECT (SELECT  gender FROM vk.profiles WHERE vk.profiles.user_id = vk.likes.user_id) as 'пол', 
+COUNT(*) as 'кол-во лайков'
+FROM vk.likes
+GROUP BY 
+(SELECT  gender FROM vk.profiles WHERE vk.profiles.user_id = vk.likes.user_id)
+;
+
