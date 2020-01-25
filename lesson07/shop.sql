@@ -1,3 +1,8 @@
+DROP DATABASE IF EXISTS shop;
+CREATE DATABASE shop;
+USE shop;
+
+
 DROP TABLE IF EXISTS catalogs;
 CREATE TABLE catalogs (
   id SERIAL PRIMARY KEY,
@@ -52,7 +57,7 @@ CREATE TABLE products (
 ) COMMENT = 'Товарные позиции';
 
 INSERT INTO products
-  (name, description, price, catalog_id)
+  (name, desription, price, catalog_id)
 VALUES
   ('Intel Core i3-8100', 'Процессор для настольных персональных компьютеров, основанных на платформе Intel.', 7890.00, 1),
   ('Intel Core i5-7400', 'Процессор для настольных персональных компьютеров, основанных на платформе Intel.', 12700.00, 1),
@@ -71,6 +76,8 @@ CREATE TABLE orders (
   KEY index_of_user_id(user_id)
 ) COMMENT = 'Заказы';
 
+
+
 DROP TABLE IF EXISTS orders_products;
 CREATE TABLE orders_products (
   id SERIAL PRIMARY KEY,
@@ -81,6 +88,20 @@ CREATE TABLE orders_products (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) COMMENT = 'Состав заказа';
 
+INSERT INTO orders_products 
+  (order_id, product_id, total) 
+VALUES 
+  (1, 3, 1),
+  (2, 3, 1),
+  (3, 1, 2),
+  (4, 6, 1),
+  (5, 6, 3),
+  (6, 1, 1),
+  (7, 2, 1),
+  (8, 2, 2),
+  (9, 3, 1),
+  (10, 5, 2);
+ 
 DROP TABLE IF EXISTS discounts;
 CREATE TABLE discounts (
   id SERIAL PRIMARY KEY,
@@ -112,3 +133,122 @@ CREATE TABLE storehouses_products (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) COMMENT = 'Запасы на складе';
+
+
+
+
+
+/*
+ Составьте список пользователей users, 
+ которые осуществили хотя бы один заказ orders в интернет магазине.
+ */
+
+INSERT INTO orders
+  (user_id) 
+VALUES
+  (1),
+  (1),
+  (2),
+  (1),
+  (4),
+  (5),
+  (2),
+  (3),
+  (3),
+  (4);
+ 
+ INSERT INTO orders_products 
+  (order_id, product_id, total) 
+VALUES 
+  (1, 3, 1),
+  (2, 3, 1),
+  (3, 1, 2),
+  (4, 6, 1),
+  (5, 6, 3),
+  (6, 1, 1),
+  (7, 2, 1),
+  (8, 2, 2),
+  (9, 3, 1),
+  (10, 5, 2);
+-- Показывает всех пользователей 
+ SELECT * FROM users;
+-- Показывает какие пользователи делали заказы
+SELECT user_id FROM orders GROUP BY user_id;
+
+-- Объеденяю таблицы и группирую по users.id
+SELECT name FROM
+  users 
+JOIN 
+  orders 
+WHERE users.id = orders.user_id
+GROUP BY users.id;
+
+
+
+/*
+Выведите список товаров products и разделов catalogs, который соответствует товару.
+ */
+
+SELECT * FROM catalogs;
+SELECT * FROM products;
+SELECT id, name, catalog_id FROM products;
+
+
+SELECT products.id, products.name, catalogs.name 
+FROM 
+catalogs 
+JOIN 
+products 
+ON products.catalog_id = catalogs.id 
+WHERE catalogs.id = (SELECT catalog_id FROM products WHERE name = 'Intel Core i3-8100');
+
+/*
+(по желанию) Пусть имеется таблица рейсов flights (id, from, to)
+ и таблица городов cities (label, name). Поля from, to и label содержат 
+ английские названия городов, поле name — русское. 
+ Выведите список рейсов flights с русскими названиями городов.  
+ */
+
+DROP TABLE IF EXISTS flights; 
+CREATE TABLE flights(
+  id SERIAL PRIMARY KEY,
+  from_id INT UNSIGNED,
+  to_id INT UNSIGNED
+);
+
+DROP TABLE IF EXISTS cities;
+CREATE TABLE cities(
+  id SERIAL PRIMARY KEY,
+  label VARCHAR(60),
+  name VARCHAR(60)
+);
+
+
+INSERT INTO 
+  cities(name) 
+VALUES 
+  ('Moscow'),
+  ('Novosibirsk'),
+  ('Vladivostok'),
+  ('St. Petersburg'),
+  ('Омск'),
+  ('Иркутск');
+
+ INSERT INTO 
+   flights(from_id, to_id)
+ VALUES 
+   (1,2),
+   (2,1),
+   (1,3),
+   (1,4),
+   (4,3),
+   (3,2),
+   (3,1),
+   (2,6),
+   (6,5),
+   (5,1);
+ 
+ SELECT flights.id, cities.name FROM 
+flights JOIN cities ON flights.from_id = cities.id or flights.to_id = cities.id WHERE cities.name RLIKE '[А-ЯЁа-яё]';
+  
+  
