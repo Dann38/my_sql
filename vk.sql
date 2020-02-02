@@ -1,11 +1,3 @@
-/* Задача 4
-i. Заполнить все таблицы БД vk данными (по 10-100 записей в каждой таблице)
-ii. Написать скрипт, возвращающий список имен (только firstname) пользователей без повторений в алфавитном порядке
-iii. Написать скрипт, отмечающий несовершеннолетних пользователей как неактивных (поле is_active = true). При необходимости предварительно добавить такое поле в таблицу profiles со значением по умолчанию = false (или 0)
-iv. Написать скрипт, удаляющий сообщения «из будущего» (дата позже сегодняшней)
-v. Написать название т
-*/
-
 DROP DATABASE IF EXISTS vk;
 CREATE DATABASE vk;
 USE vk;
@@ -129,18 +121,6 @@ CREATE TABLE `photos` (
 );
 
 
-
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-/* 
-i. Заполнить все таблицы БД vk данными (по 10-100 записей в каждой таблице)
-ii. Написать скрипт, возвращающий список имен (только firstname) пользователей без повторений в алфавитном порядке
-iii. Написать скрипт, отмечающий несовершеннолетних пользователей как неактивных (поле is_active = true). При необходимости предварительно добавить такое поле в таблицу profiles со значением по умолчанию = false (или 0)
-iv. Написать скрипт, удаляющий сообщения «из будущего» (дата позже сегодняшней)
-v. Написать название т
-*/
-
-
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 INSERT INTO `users` VALUES ('1','Demetris','Ritchie','awisozk@example.org','1'),
 ('2','Roger','Doyle','bfeil@example.net','667'),
 ('3','Jace','Nicolas','linwood.batz@example.net','1'),
@@ -374,22 +354,21 @@ INSERT INTO `photos` VALUES ('1','1','1'),
 ('18','18','18'),
 ('19','19','19'),
 ('20','20','20'); 
--- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-INSERT INTO `users` VALUES ('21','Demetris','Ritchie','awisozk2@example.org','1');
-SELECT DISTINCT firstname FROM users ORDER BY firstname ASC;
+/* Задача 5
+1)Пусть в таблице users поля created_at и updated_at оказались незаполненными. Заполните их текущими датой и временем.
+2)Таблица users была неудачно спроектирована. Записи created_at и updated_at были заданы типом VARCHAR и в них долгое время помещались значения в формате "20.10.2017 8:10". Необходимо преобразовать поля к типу DATETIME, сохранив введеные ранее значения.
+3)В таблице складских запасов storehouses_products в поле value могут встречаться самые разные цифры: 0, если товар закончился и выше нуля, если на складе имеются запасы. Необходимо отсортировать записи таким образом, чтобы они выводились в порядке увеличения значения value. Однако, нулевые запасы должны выводиться в конце, после всех записей.
+*/
+ALTER TABLE users ADD COLUMN created_at VARCHAR(60);
+ALTER TABLE users ADD COLUMN updated_at VARCHAR(60);
+UPDATE users SET created_at=NOW() WHERE created_at IS NULL;
+UPDATE users SET updated_at=NOW() WHERE updated_at IS NULL;
 
-SELECT user_id, birthday,IF(YEAR(NOW())-YEAR(birthday) >= 18, 'true', 'false') AS is_active FROM profiles;
+ALTER TABLE users CHANGE created_at created_at DATETIME;
+ALTER TABLE users CHANGE updated_at updated_at DATETIME;
 
-INSERT INTO `messages` VALUES ('21','1','2','Recusandae quis consequatur natus repellat qui eos. Recusandae placeat et nostrum commodi id. Ea molestias quos alias possimus reiciendis atque.','2027-06-22 04:16:35');
-SELECT created_at, NOW() FROM vk.messages WHERE UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(created_at) < 0;
-DELETE FROM vk.messages WHERE UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(created_at) < 0;
--- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
-
-
+USE vk;
 
 
 
